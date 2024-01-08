@@ -1,0 +1,913 @@
+@charset 'UTF-8';
+/* Date Clock. (c) JP 2009 (concept), 2018 (code). */
+/* stylelint-disable no-descending-specificity */
+@font-face {
+    font-family: 'Source Code Pro';
+    font-style: normal;
+    font-weight: 300;
+    src:
+        url('fonts/sourcecodepro-light-webfont.woff2') format('woff2'),
+        url('fonts/sourcecodepro-light-webfont.woff') format('woff');
+    unicode-range: U+0020-007F, U+00A0-00FF, U+2000-206F; /* Basic Latin, Latin-1 Supplement, General Punctuation */
+}
+@font-face {
+    font-family: 'Source Code Pro';
+    font-style: normal;
+    font-weight: 600;
+    src:
+        url('fonts/sourcecodepro-semibold-webfont.woff2') format('woff2'),
+        url('fonts/sourcecodepro-semibold-webfont.woff') format('woff');
+    unicode-range: U+0020-007F, U+00A0-00FF, U+2000-206F; /* Basic Latin, Latin-1 Supplement, General Punctuation */
+}
+@font-face {
+    font-family: 'Source Code Pro';
+    font-style: normal;
+    font-weight: 700;
+    src:
+        url('fonts/sourcecodepro-bold-webfont.woff2') format('woff2'),
+        url('fonts/sourcecodepro-bold-webfont.woff') format('woff');
+    unicode-range: U+0020-007F, U+00A0-00FF, U+2000-206F; /* Basic Latin, Latin-1 Supplement, General Punctuation */
+}
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+body {
+    background-color: #777;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0;
+    text-align: center;
+    -o-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+input {
+    margin: 0;
+    opacity: 0;
+    position: fixed;
+    z-index: -10;
+}
+.wrap {
+    bottom: 0;
+    height: 140.5vw;
+    left: 0;
+    margin: auto;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.bg,
+.fg {
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+}
+.bg {
+    background-color: #222;
+    transition: background-color 0.25s;
+    z-index: -1;
+}
+.fg {
+    background-color: #777;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.75s, z-index 1s;
+    z-index: -10;
+}
+.fg.upfront {
+    opacity: 1;
+    z-index: 20;
+}
+.fg.upfront ~ .display-analog {
+    transform: rotate(90deg);
+}
+#toggle-theme:checked ~ .bg {
+    background-color: #ddd;
+}
+.panel {
+    background-color: rgb(34, 34, 34);
+    background-color: rgba(34, 34, 34, 0.95);
+    bottom: 0;
+    color: #fff;
+    font-size: 5vw;
+    font-weight: 300;
+    height: 100%;
+    left: 0;
+    line-height: 1.33;
+    overflow: scroll;
+    -ms-overflow-scrolling: touch;
+    -moz-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
+    padding: 16vw;
+    position: fixed;
+    text-align: left;
+    top: 0;
+    transform: translateX(-100%);
+    transition: background-color 0.25s, color 0.25s, transform 0.25s;
+    width: 100%;
+    z-index: 30;
+}
+#toggle-panel:checked ~ .panel {
+    transform: translateX(0);
+}
+#toggle-theme:checked ~ .panel {
+    background-color: rgb(255, 255, 255);
+    background-color: rgba(255, 255, 255, 0.95);
+    color: #000;
+}
+.panel-brand,
+.panel-p,
+.panel-ul {
+    margin: 5vw 0;
+}
+.panel-brand {
+    font-size: 133%;
+    font-weight: 700;
+    margin-top: 0;
+}
+.panel-ul {
+    margin-top: -1.25vw;
+}
+.panel-li {
+    list-style-position: inside;
+    list-style-type: circle;
+    margin: 2.5vw 0;
+    padding-left: 5.5vw;
+    text-indent: -5vw;
+}
+.panel-link {
+    font-weight: 700;
+}
+.panel-link > a {
+    color: #fff;
+    position: relative;
+    text-decoration: none;
+}
+.panel-link > a::after {
+    background-color: #fff;
+    bottom: 0;
+    content: '';
+    height: 0.1em;
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    transition: opacity 0.25s;
+}
+.panel-link > a:hover::after,
+.panel-link > a:focus::after,
+.panel-link > a:active::after {
+    opacity: 1;
+}
+#toggle-theme:checked ~ .panel > .panel-link > a {
+    color: #000;
+}
+#toggle-theme:checked ~ .panel > .panel-link > a::after {
+    background-color: #000;
+}
+.reset-button {
+    background-color: #000;
+    border: 0;
+    cursor: pointer;
+    font-size: 0;
+    height: 13.1vw;
+    margin: 1vh 0 0;
+    padding: 0;
+    position: relative;
+    transition: background-color 0.25s;
+    width: 13.1vw;
+}
+.reset-button:active {
+    background-color: #333;
+}
+#toggle-theme:checked ~ .panel > .reset-button {
+    background-color: #aaa;
+}
+#toggle-theme:checked ~ .panel > .reset-button:active {
+    background-color: #eee;
+}
+.reset-button span {
+    border-bottom-color: #fff;
+    border-left-color: transparent;
+    border-radius: 50%;
+    border-right-color: #fff;
+    border-style: solid;
+    border-top-color: #fff;
+    border-width: 0.67vw;
+    bottom: 20%;
+    display: inline-block;
+    left: 20%;
+    position: absolute;
+    right: 20%;
+    top: 20%;
+    transform: rotate(0);
+    transition: transform 0.25s;
+}
+.reset-button span::before,
+.reset-button span::after {
+    background-color: #fff;
+    content: '';
+    left: 2.5%;
+    position: absolute;
+}
+.reset-button span::before {
+    height: 30%;
+    top: -7.5%;
+    width: 0.67vw;
+}
+.reset-button span::after {
+    height: 0.67vw;
+    top: 12.5%;
+    width: 30%;
+}
+#toggle-theme:checked ~ .panel > .reset-button span {
+    border-bottom-color: #000;
+    border-right-color: #000;
+    border-top-color: #000;
+}
+#toggle-theme:checked ~ .panel > .reset-button span::before,
+#toggle-theme:checked ~ .panel > .reset-button span::after {
+    background-color: #000;
+}
+.reset-button:active span {
+    transform: rotate(-90deg);
+}
+.toggle-label-panel {
+    background-color: #000;
+    cursor: pointer;
+    height: 13.1vw;
+    left: 0;
+    position: fixed;
+    top: 0;
+    transition: background-color 0.25s;
+    width: 13.1vw;
+    z-index: 40;
+}
+.toggle-label-panel:active {
+    background-color: #333;
+}
+#toggle-theme:checked ~ .toggle-label-panel {
+    background-color: #aaa;
+}
+#toggle-theme:checked ~ .toggle-label-panel:active {
+    background-color: #eee;
+}
+.toggle-label-panel::before,
+.toggle-label-panel span,
+.toggle-label-panel::after {
+    background-color: #fff;
+    content: '';
+    height: 5%;
+    left: 12.5%;
+    position: absolute;
+    transition: background-color 0.25s, transform 0.25s;
+    width: 75%;
+}
+.toggle-label-panel::before {
+    top: 27.5%;
+}
+.toggle-label-panel span {
+    top: 47.5%;
+}
+.toggle-label-panel::after {
+    top: 67.5%;
+}
+#toggle-theme:checked ~ .toggle-label-panel::before,
+#toggle-theme:checked ~ .toggle-label-panel span,
+#toggle-theme:checked ~ .toggle-label-panel::after {
+    background-color: #000;
+}
+#toggle-panel:checked ~ .toggle-label-panel::before {
+    transform: translate(0%, 400%) rotate(45deg);
+}
+#toggle-panel:checked ~ .toggle-label-panel span {
+    transform: translateX(-120%);
+}
+#toggle-panel:checked ~ .toggle-label-panel::after {
+    transform: translate(0%, -400%) rotate(-45deg);
+}
+.dial {
+    background-color: #000;
+    border-radius: 50%;
+    color: #eee;
+    height: 97vw;
+    left: 0;
+    margin: 2vw auto;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: background-color 0.25s, color 0.25s;
+    width: 97vw;
+}
+#toggle-theme:checked ~ .dial {
+    background-color: #fff;
+    color: #111;
+}
+.dial-brand,
+.dial-copyright,
+.utc-offset {
+    left: 0;
+    position: absolute;
+    right: 0;
+    width: 100%;
+}
+.dial-brand {
+    font-size: 4.125vw;
+    font-weight: 700;
+    line-height: 1.125;
+    top: 32.5%;
+}
+.dial-copyright {
+    font-size: 2.33vw;
+    font-weight: 300;
+    top: 38.5%;
+}
+.utc-offset {
+    bottom: 33.5%;
+    font-size: 3.25vw;
+    font-weight: 600;
+}
+.display-analog {
+    border-radius: 50%;
+    color: #fff;
+    height: 97vw;
+    margin: 2vw auto;
+    position: relative;
+    transform: rotate(180deg);
+    transition: background-color 0.25s, color 0.25s, transform 1s;
+    width: 97vw;
+}
+#toggle-orientation:checked ~ .display-analog {
+    transform: rotate(0);
+}
+#toggle-theme:checked ~ .display-analog {
+    color: #000;
+}
+.display-digital {
+    background-color: #000;
+    display: inline-block;
+    font-size: 9.21vw;
+    font-weight: 300;
+    line-height: 0.75;
+    margin: 0 auto;
+    padding: 3vw 9.9vw;
+    transition: background-color 0.25s;
+}
+#toggle-theme:checked ~ .display-digital {
+    background-color: #fff;
+}
+.rule {
+    background-color: red;
+    display: none;
+    position: absolute;
+}
+.rule-hori {
+    height: 0.2%;
+    top: 49.9%;
+    width: 100%;
+}
+.rule-vert {
+    height: 100%;
+    left: 49.9%;
+    width: 0.2%;
+}
+.pip {
+    left: 50%;
+    position: absolute;
+}
+.pip-month {
+    font-size: 6vw;
+    height: 31.5%; /* 50% - top */
+    top: 18.5%;
+    width: 31.5%; /* same as height */
+}
+.pip-day {
+    font-size: 4vw;
+    height: 39%;
+    top: 11%;
+    width: 39%;
+}
+.pip-hour {
+    font-size: 3vw;
+    height: 44.5%;
+    top: 5.5%;
+    width: 44.5%;
+}
+.pip-minute {
+    font-size: 2vw;
+    height: 48.5%;
+    top: 1.5%;
+    width: 48.5%;
+}
+.pip > span,
+.pip > strong {
+    font-weight: 300;
+    height: 100%;
+    left: -15%;
+    position: absolute;
+    transform-origin: 50% 100%;
+    width: 30%;
+}
+.pip > strong {
+    font-weight: 700;
+}
+.hand {
+    outline-offset: 0.5vw;
+    position: absolute;
+    transition: background-color 0.25s;
+}
+.hand-month {
+    background-color: #ddd;
+    height: 29.5%; /* 55% - top */
+    left: 47.5%; /* 50% - width / 2 */
+    top: 25.5%;
+    transform: rotate(0);
+    transform-origin: 50% 83.1%; /* 50% eyeball% */
+    width: 5%;
+}
+#toggle-theme:checked ~ .display-analog > .hand-month {
+    background-color: #222;
+}
+.hand-day {
+    background-color: #bbb;
+    height: 39.4%;
+    left: 48%;
+    top: 15.6%;
+    transform: rotate(0);
+    transform-origin: 50% 87.2%;
+    width: 4%;
+}
+#toggle-theme:checked ~ .display-analog > .hand-day {
+    background-color: #444;
+}
+.hand-hour {
+    background-color: #999;
+    height: 46%;
+    left: 48.5%;
+    top: 9%;
+    transform: rotate(0);
+    transform-origin: 50% 89%;
+    width: 3%;
+}
+#toggle-theme:checked ~ .display-analog > .hand-hour {
+    background-color: #666;
+}
+.hand-minute {
+    background-color: #777;
+    height: 51%;
+    left: 49%;
+    top: 4%;
+    transform: rotate(0);
+    transform-origin: 50% 90.3%;
+    width: 2%;
+}
+#toggle-theme:checked ~ .display-analog > .hand-minute {
+    background-color: #888;
+}
+.hand-second {
+    background-color: #555;
+    height: 53.6%;
+    left: 49.5%;
+    top: 1.4%;
+    transform: rotate(0);
+    transform-origin: 50% 90.7%;
+    width: 1%;
+}
+#toggle-theme:checked ~ .display-analog > .hand-second {
+    background-color: #aaa;
+}
+.supertitle {
+    background-color: #333;
+    color: #fff;
+    font-size: 6vw;
+    font-weight: 600;
+    left: 36.75%;
+    opacity: 0;
+    padding: 1% 0;
+    position: absolute;
+    top: -1%;
+    transition: background-color 0.25s, color 0.25s, opacity 0.25s;
+    width: 26.5%;
+    z-index: 1;
+}
+#toggle-theme:checked ~ .dial > .supertitle {
+    background-color: #ccc;
+    color: #000;
+}
+.supertitle.focus {
+    opacity: 1;
+}
+#supertitle-month {
+    left: 38.5%;
+    width: 23%;
+}
+#supertitle-day {
+    left: 42%;
+    width: 16%;
+}
+#supertitle-hour {
+    left: 40.25%;
+    width: 19.5%;
+}
+.digit {
+    display: inline-block;
+    outline-offset: 2vw;
+    transition: color 0.25s;
+}
+.digit-month {
+    color: #ddd;
+}
+#toggle-theme:checked ~ .display-digital > .digit-month {
+    color: #222;
+}
+.digit-hyphen {
+    color: #999;
+}
+#toggle-theme:checked ~ .display-digital > .digit-hyphen {
+    color: #666;
+}
+.digit-day {
+    color: #bbb;
+}
+#toggle-theme:checked ~ .display-digital > .digit-day {
+    color: #444;
+}
+.digit-hour {
+    color: #999;
+}
+#toggle-theme:checked ~ .display-digital > .digit-hour {
+    color: #666;
+}
+.digit-colon-1 {
+    color: #555;
+}
+#toggle-theme:checked ~ .display-digital > .digit-colon-1 {
+    color: #aaa;
+}
+.digit-minute {
+    color: #777;
+}
+#toggle-theme:checked ~ .display-digital > .digit-minute {
+    color: #888;
+}
+.digit-colon-2 {
+    color: #333;
+}
+#toggle-theme:checked ~ .display-digital > .digit-colon-2 {
+    color: #ccc;
+}
+.digit-second {
+    color: #555;
+}
+#toggle-theme:checked ~ .display-digital > .digit-second {
+    color: #aaa;
+}
+.focal {
+    cursor: pointer;
+    outline-color: rgba(204, 204, 204, 0);
+    outline-style: double;
+    outline-width: 0;
+    transition: outline-width 0.25s;
+}
+.focal.focus {
+    outline-color: rgba(204, 204, 204, 1);
+    outline-width: 1vw;
+}
+#toggle-theme:checked ~ * > .focal {
+    outline-color: rgba(119, 119, 119, 0);
+}
+#toggle-theme:checked ~ * > .focal.focus {
+    outline-color: rgba(119, 119, 119, 1);
+}
+.sep-hori {
+    display: block;
+}
+.toggle-label-setting-wrap {
+    position: relative;
+}
+.toggle-label-setting {
+    background-color: #000;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 3.4vw;
+    font-weight: 600;
+    height: 22.5vw;
+    margin: 2vw 1vw;
+    position: relative;
+    transition: background-color 0.25s, color 0.25s;
+    width: 22.5vw;
+}
+.toggle-label-setting::before {
+    background-color: #333;
+    content: '';
+    height: calc(50% - 1vw);
+    left: 1vw;
+    position: absolute;
+    right: 1vw;
+    transform: translateY(calc(100% + 1vw));
+    transition: background-color 0.25s, transform 0.25s;
+}
+.toggle-label-setting span {
+    bottom: auto;
+    height: 50%;
+    left: 0;
+    line-height: 12vw;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.toggle-label-setting span:last-child {
+    bottom: 0;
+    line-height: 10vw;
+    top: auto;
+}
+#toggle-theme:checked ~ .toggle-label-setting-wrap > .toggle-label-setting {
+    background-color: #fff;
+    color: #000;
+}
+#toggle-theme:checked ~ .toggle-label-setting-wrap > .toggle-label-setting::before {
+    background-color: #ccc;
+}
+#toggle-month:checked ~ .toggle-label-setting-wrap > #toggle-label-month::before {
+    transform: translateY(1vw);
+}
+#toggle-time:checked ~ .toggle-label-setting-wrap > #toggle-label-time::before {
+    transform: translateY(1vw);
+}
+#toggle-orientation:checked ~ .toggle-label-setting-wrap > #toggle-label-orientation::before {
+    transform: translateY(1vw);
+}
+#toggle-theme:checked ~ .toggle-label-setting-wrap > #toggle-label-theme::before {
+    transform: translateY(1vw);
+}
+#toggle-month:active ~ .toggle-label-setting-wrap > #toggle-label-month {
+    background-color: #111;
+}
+#toggle-time:active ~ .toggle-label-setting-wrap > #toggle-label-time {
+    background-color: #111;
+}
+#toggle-orientation:active ~ .toggle-label-setting-wrap > #toggle-label-orientation {
+    background-color: #111;
+}
+#toggle-theme:active ~ .toggle-label-setting-wrap > #toggle-label-theme {
+    background-color: #111;
+}
+#toggle-month:active ~ #toggle-theme:checked ~ .toggle-label-setting-wrap > #toggle-label-month {
+    background-color: #eee;
+}
+#toggle-time:active ~ #toggle-theme:checked ~ .toggle-label-setting-wrap > #toggle-label-time {
+    background-color: #eee;
+}
+#toggle-orientation:active ~ #toggle-theme:checked ~ .toggle-label-setting-wrap > #toggle-label-orientation {
+    background-color: #eee;
+}
+#toggle-theme:active ~ #toggle-theme:checked ~ .toggle-label-setting-wrap > #toggle-label-theme {
+    background-color: #eee;
+}
+.ios-prompt {
+    background-color: #eee;
+    bottom: -40px;
+    font-family: sans-serif;
+    font-weight: 300;
+    height: 40px;
+    left: 0;
+    opacity: 0;
+    position: fixed;
+    right: 0;
+    transition: opacity 0.25s, transform 0.25s;
+    z-index: 10;
+}
+.ios-prompt.open {
+    opacity: 1;
+    transform: translateY(-40px);
+}
+.ios-prompt-close {
+    background: 0;
+    border: 0;
+    float: left;
+    font-size: 15px;
+    height: 100%;
+    width: 40px;
+}
+.ios-prompt-p {
+    font-size: 1rem;
+    height: 100%;
+    line-height: 40px;
+    padding-right: 10px;
+}
+.ios-share,
+.ios-a2hs {
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    display: inline-block;
+    overflow: hidden;
+    text-indent: 100%;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+.ios-share {
+    background-image: url('ios-share.svg');
+    background-size: 15px 20px;
+    height: 20px;
+    margin: 0 1px 5px;
+    width: 15px;
+}
+.ios-a2hs {
+    background-image: url('ios-a2hs.svg');
+    background-size: 20px 20px;
+    height: 20px;
+    margin: 0 1px 3px;
+    width: 20px;
+}
+@media screen and (min-aspect-ratio: 3/4) {
+    .wrap {
+        height: 100vh;
+    }
+    .panel {
+        font-size: 2.25vh;
+        padding: 9vh;
+    }
+    .panel-brand,
+    .panel-p,
+    .panel-ul,
+    .panel-copyright {
+        margin: 2.5vh 0;
+    }
+    .panel-brand {
+        margin-top: 0;
+    }
+    .panel-ul {
+        margin-top: -0.625vh;
+    }
+    .panel-li {
+        margin: 1.25vh 0;
+        padding-left: 3.5vh;
+        text-indent: -3.125vh;
+    }
+    .reset-button,
+    .toggle-label-panel {
+        height: 7vh;
+        width: 7vh;
+    }
+    .reset-button span {
+        border-width: 0.33vh;
+    }
+    .reset-button span::before {
+        width: 0.33vh;
+    }
+    .reset-button span::after {
+        height: 0.33vh;
+    }
+    .dial,
+    .display-analog {
+        height: 70vh;
+        margin: 1.5vh auto;
+        width: 70vh;
+    }
+    .dial-brand {
+        font-size: 3vh;
+    }
+    .dial-copyright {
+        font-size: 1.125vh;
+        top: 39%;
+    }
+    .utc-offset {
+        font-size: 2.4vh;
+    }
+    .hand {
+        outline-offset: 0.5vh;
+    }
+    .display-digital {
+        font-size: 4.96vh;
+        padding: 1.5vh 5.8vh;
+    }
+    .pip-month {
+        font-size: 4.4vh;
+    }
+    .pip-day {
+        font-size: 2.9vh;
+    }
+    .pip-hour {
+        font-size: 2.25vh;
+    }
+    .pip-minute {
+        font-size: 1.5vh;
+    }
+    .supertitle {
+        font-size: 4.5vh;
+    }
+    .digit {
+        outline-offset: 1vh;
+        padding: 0 0 0.25vh;
+    }
+    .focal.focus {
+        outline-width: 0.6vh;
+    }
+    .toggle-label-setting {
+        font-size: 2.6vh;
+        height: 16.3vh;
+        margin: 1.5vh 0.75vh;
+        width: 16.3vh;
+    }
+    .toggle-label-setting::before {
+        height: calc(50% - 0.5vh);
+        left: 0.5vh;
+        right: 0.5vh;
+        transform: translateY(calc(100% + 0.5vh));
+    }
+    .toggle-label-setting span {
+        line-height: 8.5vh;
+    }
+    .toggle-label-setting span:last-child {
+        line-height: 8vh;
+    }
+    #toggle-month:checked ~ .toggle-label-setting-wrap > #toggle-label-month::before {
+        transform: translateY(0.5vh);
+    }
+    #toggle-time:checked ~ .toggle-label-setting-wrap > #toggle-label-time::before {
+        transform: translateY(0.5vh);
+    }
+    #toggle-orientation:checked ~ .toggle-label-setting-wrap > #toggle-label-orientation::before {
+        transform: translateY(0.5vh);
+    }
+    #toggle-theme:checked ~ .toggle-label-setting-wrap > #toggle-label-theme::before {
+        transform: translateY(0.5vh);
+    }
+}
+@media screen and (min-aspect-ratio: 4/3) {
+    .dial,
+    .display-analog {
+        height: 85vh;
+        margin: 2.5vh auto;
+        width: 85vh;
+    }
+    .dial-brand {
+        font-size: 3.5vh;
+    }
+    .dial-copyright {
+        font-size: 1.25vh;
+    }
+    .utc-offset {
+        font-size: 2.67vh;
+    }
+    .pip-month {
+        font-size: 5.5vh;
+    }
+    .pip-day {
+        font-size: 3.4vh;
+    }
+    .pip-hour {
+        font-size: 2.6vh;
+    }
+    .pip-minute {
+        font-size: 1.8vh;
+    }
+    .supertitle {
+        font-size: 5vh;
+    }
+    .toggle-label-setting-wrap {
+        position: absolute;
+        right: 2.5vh;
+        top: 2.5vh;
+        width: 21.75vh;
+    }
+    .toggle-label-setting {
+        font-size: 3.2vh;
+        height: 21.75vh;
+        margin: 0 0 2.5vh 0;
+        right: 0;
+        width: 21.75vh;
+        z-index: 1;
+    }
+    .toggle-label-setting::before {
+        height: calc(50% - 1vh);
+        left: 1vh;
+        right: 1vh;
+        transform: translateY(calc(100% + 1vh));
+    }
+    .toggle-label-setting span {
+        line-height: 11.5vh;
+    }
+    .toggle-label-setting span:last-child {
+        line-height: 10vh;
+    }
+    #toggle-month:checked ~ .toggle-label-setting-wrap > #toggle-label-month::before {
+        transform: translateY(1vh);
+    }
+    #toggle-time:checked ~ .toggle-label-setting-wrap > #toggle-label-time::before {
+        transform: translateY(1vh);
+    }
+    #toggle-orientation:checked ~ .toggle-label-setting-wrap > #toggle-label-orientation::before {
+        transform: translateY(1vh);
+    }
+    #toggle-theme:checked ~ .toggle-label-setting-wrap > #toggle-label-theme::before {
+        transform: translateY(1vh);
+    }
+}

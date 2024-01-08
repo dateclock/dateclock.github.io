@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Date Clock | Analog layers of date and time. An holistic horologe of cyclic progression.</title>
+
+        <!-- Base appearance. -->
+        <meta name="viewport" content="initial-scale=1.0">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="msapplication-navbutton-color" content="#777777">
+
+        <!-- realfavicongenerator.net -->
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=kPxzkAPK08">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=kPxzkAPK08">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=kPxzkAPK08">
+        <link rel="manifest" href="/manifest.json?v=kPxzkAPK08">
+        <link rel="mask-icon" href="/safari-pinned-tab.svg?v=kPxzkAPK08" color="#777777">
+        <link rel="shortcut icon" href="/favicon.ico?v=kPxzkAPK08">
+        <meta name="apple-mobile-web-app-title" content="Date Clock">
+        <meta name="application-name" content="Date Clock">
+        <meta name="msapplication-TileColor" content="#777777">
+        <meta name="theme-color" content="#777777">
+
+        <!-- SEO & share. -->
+        <meta name="robots" content="index, follow">
+        <meta name="description" content="Touch hands or digits to show names. Toggle time, orientation, and theme. Each dial is centrally aligned on its origin. Lunar year is defined from the first moon to be full after winter solstice, to the last moon to be full on or before winter solstice.">
+        <meta name="keywords" content="analog, animated, calendar, cyclic, date clock, daylight saving time, gregorian, holistic, horologe, lunar, moon, natural time, solar, standard time, wristwatch">
+        <meta name="author" content="Jay Pea">
+        <link rel="canonical" href="https://dateclock.net/">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Date Clock">
+        <meta property="og:site_name" content="Date Clock">
+        <meta property="og:description" content="Analog layers of date and time. An holistic horologe of cyclic progression. Touch hands or digits to show names. Toggle months, time, orientation, and theme. Each dial is centrally aligned on its origin.">
+        <meta property="og:url" content="https://dateclock.net/">
+        <meta property="og:image" content="https://dateclock.net/dateclock-preview.png">
+        <meta property="og:image" content="https://dateclock.net/dateclock-dark-preview.png">
+        <meta property="og:image" content="https://dateclock.net/sketches/dateclock-sketch-1.jpg">
+        <meta property="og:image" content="https://dateclock.net/sketches/dateclock-sketch-2.jpg">
+        <meta property="og:image" content="https://dateclock.net/sketches/dateclock-sketches.jpg">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Date Clock">
+        <meta name="twitter:description" content="Analog layers of date and time. An holistic horologe of cyclic progression. Toggle time, orientation, and theme.">
+        <meta name="twitter:site" content="@DateClock">
+        <meta name="twitter:creator" content="@mr_jay_pea">
+        <meta name="twitter:image" content="https://dateclock.net/dateclock-preview.png">
+        <script type="application/ld+json">
+            {
+                "@context": "http://schema.org",
+                "@type": "WebSite",
+                "name": "Date Clock",
+                "description": "Analog layers of date and time. An holistic horologe of cyclic progression.",
+                "url": "https://dateclock.net/",
+                "sameAs": [
+                    "https://twitter.com/DateClock",
+                    "https://www.facebook.com/DateClock/"
+                ],
+                "logo": "https://dateclock.net/dateclock-logo-1.png",
+                "image": [
+                    "https://dateclock.net/screenshots/dateclock-dark.png",
+                    "https://dateclock.net/screenshots/dateclock-highlight.png",
+                    "https://dateclock.net/screenshots/dateclock-info-dark.png",
+                    "https://dateclock.net/screenshots/dateclock-info.png",
+                    "https://dateclock.net/screenshots/dateclock-sundial.png",
+                    "https://dateclock.net/screenshots/dateclock-wide-dark.png",
+                    "https://dateclock.net/screenshots/dateclock-wide.png",
+                    "https://dateclock.net/screenshots/dateclock.png"
+                ]
+            }
+        </script>
+
+        <!-- Styles & scripts. -->
+        <link rel="stylesheet" type="text/css" href="reset.css">
+        <link rel="stylesheet" type="text/css" href="dateclock.css">
+        <script async src="dateclock.js"></script>
+
+        <!-- Analytics. -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-79M0MBZ7JD"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-79M0MBZ7JD');
+        </script>
+
+    </head>
+    <body ontouchstart="">
+        <div class="wrap">
+
+            <input id="toggle-panel" type="checkbox">
+            <input id="toggle-month" type="checkbox">
+            <input id="toggle-time" type="checkbox">
+            <input id="toggle-orientation" type="checkbox">
+            <input id="toggle-theme" type="checkbox">
+
+            <div class="bg"></div>
+            <div class="fg upfront" id="fg"></div>
+
+            <div class="panel" id="panel">
+                <h1 class="panel-brand">DATE&#xa0;CLOCK</h1>
+                <p class="panel-p">Analog layers of date and time. An holistic hor&#xad;o&#xad;loge of cyc&#xad;lic progression.</p>
+                <p class="panel-p">Touch hands or digits to show names.</p>
+                <p class="panel-p">Toggle:</p>
+                <ul class="panel-ul">
+                    <li class="panel-li">Gregorian vs lunar months.</li>
+                    <li class="panel-li">Daylight Shifting (&#x201c;Saving&#x201d;) vs Stan&#xad;dard&#xa0;Time.</li>
+                    <li class="panel-li">Origin at top vs bottom.</li>
+                    <li class="panel-li">Colors.</li>
+                </ul>
+                <p class="panel-p">Each dial is centrally aligned on its origin:</p>
+                <ul class="panel-ul">
+                    <li class="panel-li">First second of a minute is zero.</li>
+                    <li class="panel-li">First minute of an hour is zero.</li>
+                    <li class="panel-li">First hour of a day is zero.</li>
+                    <li class="panel-li">First day of a month is one.</li>
+                    <li class="panel-li">First month of a year is one.</li>
+                </ul>
+                <p class="panel-p">Lunar year is defined from first moon full af&#xad;ter winter sol&#xad;stice, to last moon full on or before winter solstice.</p>
+                <p class="panel-p">Years with thirteen full moons count the first as zero, so as to leap (tra&#xad;di&#xad;tion&#xad;al blue, belewe, be&#xad;tray&#xad;er moon).</p>
+                <p class="panel-p panel-link"><a href="sketches/" title="View">Original Sketches</a></p>
+                <p class="panel-p panel-link"><a href="https://github.com/jtheletter/dateclock" target="_blank" title="Visit">GitHub</a></p>
+                <p class="panel-p panel-link"><a href="https://twitter.com/DateClock" target="_blank" title="Visit">Twitter</a></p>
+                <p class="panel-p panel-link"><a href="https://www.facebook.com/DateClock/" target="_blank" title="Visit">Facebook</a></p>
+                <p class="panel-p panel-link"><a href="https://calendardial.net/" target="_blank" title="Visit">Lunisolar Calendar&#xa0;Dial</a></p>
+                <p class="panel-p panel-link"><a href="https://jtheletter.com/" target="_blank" title="Visit">jtheletter.com</a></p>
+                <p class="panel-p panel-copyright">&#xa9;&#x200A;2009,&#x2004;2018&#x0020;Jay Pea</p>
+                <button class="reset-button" id="reset-button" title="Reset Clock"><small>Reset Clock</small><span></span></button>
+            </div>
+
+            <label class="toggle-label-panel" id="toggle-label-panel" for="toggle-panel" title="View Info"><small>View Info</small><span></span></label>
+
+            <div class="dial">
+                <p class="supertitle" id="supertitle-month">Month</p>
+                <p class="supertitle" id="supertitle-day">Day</p>
+                <p class="supertitle" id="supertitle-hour">Hour</p>
+                <p class="supertitle" id="supertitle-minute">Minute</p>
+                <p class="supertitle" id="supertitle-second">Second</p>
+
+                <h1 class="dial-brand">DATE&#x2004;CLOCK</h1>
+                <p class="dial-copyright">&#xa9;&#x200A;2009,&#x2004;2018&#x0020;JP</p>
+                <p class="utc-offset">UTC<span id="utc-offset"></span></p>
+            </div>
+
+            <div class="display-analog">
+                <div class="rule rule-hori"></div>
+                <div class="rule rule-vert"></div>
+
+                <p class="pip pip-month" id="pip-month"></p>
+                <p class="pip pip-day" id="pip-day"></p>
+                <p class="pip pip-hour" id="pip-hour"></p>
+                <p class="pip pip-minute" id="pip-minute"></p>
+
+                <div class="hand focal hand-month" id="hand-month"></div>
+                <div class="hand focal hand-day" id="hand-day"></div>
+                <div class="hand focal hand-hour" id="hand-hour"></div>
+                <div class="hand focal hand-minute" id="hand-minute"></div>
+                <div class="hand focal hand-second" id="hand-second"></div>
+            </div>
+
+            <p class="display-digital"><span class="digit focal digit-month" id="digit-month">00</span><span class="digit digit-hyphen">&#x2010;</span><span class="digit focal digit-day" id="digit-day">00</span><span class="digit">&#x2004;&#x2004;</span><span class="digit focal digit-hour" id="digit-hour">00</span><span class="digit digit-colon-1">&#x3a;</span><span class="digit focal digit-minute" id="digit-minute">00</span><span class="digit digit-colon-2">&#x3a;</span><span class="digit focal digit-second" id="digit-second">00</span></p>
+
+            <div class="sep-hori"></div>
+
+            <div class="toggle-label-setting-wrap">
+                <label class="toggle-label-setting" id="toggle-label-month" for="toggle-month" title="Toggle Month"><span>公历</span><span>农历</span></label>
+                <!-- <label class="toggle-label-setting" id="toggle-label-time" for="toggle-time" title="Toggle Time"><span>DST</span><span>Standard</span></label> -->
+                <label class="toggle-label-setting" id="toggle-label-orientation" for="toggle-orientation" title="Toggle Orientation"><span>表</span><span>晷</span></label>
+                <label class="toggle-label-setting" id="toggle-label-theme" for="toggle-theme" title="Toggle Theme"><span>明亮模式</span><span>夜间模式</span></label>
+            </div>
+
+            <div class="ios-prompt" id="ios-prompt">
+                <button class="ios-prompt-close" id="ios-prompt-close" title="Close.">&#x2573;</button>
+                <p class="ios-prompt-p">Tap <span class="ios-share">Share</span> then <span class="ios-a2hs">Add to Home Screen</span> to save this app.</p>
+            </div>
+
+        </div>
+    </body>
+</html>
+

@@ -1,0 +1,21 @@
+{
+    "name": "Date Clock",
+    "short_name": "Date Clock",
+    "icons": [
+        {
+            "src": "/android-chrome-192x192.png?v=kPxzkAPK08",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/android-chrome-512x512.png?v=kPxzkAPK08",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#777777",
+    "background_color": "#777777",
+    "start_url": "https://dateclock.net/",
+    "display": "fullscreen",
+    "orientation": "any"
+}
